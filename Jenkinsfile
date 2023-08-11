@@ -16,7 +16,8 @@ node {
     stage('Deliver') {
         docker.image('cdrx/pyinstaller-linux:python2').inside {
             dir('/src') {
-                
+                sh 'pwd'
+                sh 'ls-la'
             }
         }
         post {
