@@ -5,7 +5,7 @@ node {
     stage('Build') {
         docker.image('python:2-alpine').inside {
             sh 'python -m py_compile sources/add2vals.py sources/calc.py'
-            sh 'mkdir -p compiled-result && cp *.pyc compiled-result/'
+            sh 'mkdir -p compiled-result && cp sources/*.pyc compiled-result/'
             stash(name: 'compiled-result')
         }
 
