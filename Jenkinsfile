@@ -17,15 +17,15 @@ node {
     stage('Manual Approval') {
         def userInput = input(
             id: 'DeployApproval',
-            message: 'Deploy to production?',
+            message: 'Lanjutkan ke Tahap Deploy?',
             parameters: [[$class: 'BooleanParameterDefinition', name: 'deploy', defaultValue: false, description: 'Approve deployment']]
         )
         
         if (userInput.deploy) {
-            echo 'Deployment approved'
+            echo 'Deployment disetujui'
         } else {
             currentBuild.result = 'ABORTED'
-            error('Deployment aborted by user')
+            error('Deployment telah dibatalkan')
         }
     }
     stage('Deploy') {
