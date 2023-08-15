@@ -4,9 +4,9 @@ node {
     }
     stage('Build') {
         docker.image('python:2-alpine').inside {
-            sh 'python -m py_compile sources/add2vals.py sources/calc.py'
-            sh 'ls -la sources'
-            stash(name: 'compiled-result')
+            sh 'python -m py_compile -b -d compiled-result sources/add2vals.py sources/calc.py'
+            stash(name: 'compiled-result', include: 'compiled-result')
+            sh 'ls-la'
         }
 
     }
