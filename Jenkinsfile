@@ -14,7 +14,15 @@ node {
             sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
         }
     }
-    stage('Deliver') {
+    stage ('Approval') {
+        def userInput = input message: 'Deploy ke production?', ok: 'Deploy', parameters: [booleanParam(name: 'DEPLOY', description: 'Deploy or cancel?', defaultValue: false)]
+        if (userInput.DEPLOY) {
+            echo 'Memulai Deployment...'
+        } else {
+            error 'Deployment telah dibatalkan'
+        }
+    }
+    stage('Deploy') {
         env.VOLUME = "${pwd()}/sources:/src"
         env.IMAGE = "cdrx/pyinstaller-linux:python2"
         dir(env.BUILD_ID) {
@@ -23,5 +31,6 @@ node {
         }
         archiveArtifacts artifacts: 'sources/dist/add2vals'
         sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'rm -rf build dist'"
+        sh "sleep 60"
     }
 }
