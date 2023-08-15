@@ -13,14 +13,7 @@ node {
         docker.image('qnib/pytest').inside {
             sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
         }
-    }
-    stage ('Approval') {
-        def userInput = input message: 'Deploy ke production?', ok: 'Deploy', parameters: [booleanParam(name: 'Deploy', description: 'Deploy atau batalkan?', defaultValue: false)]
-        if (userInput.DEPLOY) {
-            echo 'Memulai Deployment...'
-        } else {
-            error 'Deployment telah dibatalkan'
-        }
+        input message: 'Lanjutkan ke tahap Deploy? (Click "Proceed" to continue)'
     }
     stage('Deploy') {
         env.VOLUME = "${pwd()}/sources:/src"
