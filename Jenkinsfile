@@ -15,10 +15,10 @@ node {
         }
     }
     stage('Manual Approval') {
-        def userInput = input message: 'Lanjutkan ke Tahap Deploy?', ok: 'Deploy', parameters: [booleanParam(name: 'DEPLOY', description: 'Deploy atau batalkan?', defaultValue: false)]
-        if (userInput.DEPLOY) {
+        try {
+            input message: 'Lanjutkan ke Tahap Deploy?', ok: 'Deploy'
             echo 'Deploying...'
-        } else {
+        } catch (err) {
             echo 'Deployment telah dibatalkan'
         }
     }
@@ -33,4 +33,9 @@ node {
         sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'rm -rf build dist'"
         sh "sleep 60"
     }
+}
+try {
+    currentBuild.resultIsBetterOrEqualTo('ABORTED')
+} catch (err) {
+    echo "pipeline has been aborted"
 }
