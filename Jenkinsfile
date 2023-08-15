@@ -18,15 +18,8 @@ node {
         def userInput = input(
             id: 'DeployApproval',
             message: 'Lanjutkan ke Tahap Deploy?',
-            parameters: [[$class: 'BooleanParameterDefinition', name: 'deploy', defaultValue: false, description: 'Approve deployment']]
+            ok: 'Deploy'
         )
-        
-        if (userInput.deploy) {
-            echo 'Deployment disetujui'
-        } else {
-            currentBuild.result = 'ABORTED'
-            error('Deployment telah dibatalkan')
-        }
     }
     stage('Deploy') {
         env.VOLUME = "${pwd()}/sources:/src"
