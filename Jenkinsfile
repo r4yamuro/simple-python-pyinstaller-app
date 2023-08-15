@@ -14,16 +14,12 @@ node {
         }
     }
     stage('Deliver') {
-        docker.image('cdrx/pyinstaller-linux:python2').inside {
-            dir('/src') {
-                sh 'pwd'
-                sh 'ls-la'
-            }
+        env.VOLUME = '${pwd()}/sources:/src'
+        env.IMAGE = 'cdrx/pyinstaller-linux:python2'
+        dir(env.BUILD_ID) {
+            unstash(name: 'compiled-result')
+            sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'pyinstaller -F add2vals.py'"
         }
-        post {
-            success {
-                archiveArtifacts artifacts: 'dist/add2vals', allowEmptyArchive: true
-            }
-        }
+        archiveArtifacts artifacts: 'sources/dist/add2vals'
+        sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'rm -rf build dist'"
     }
-}
