@@ -15,7 +15,7 @@ node {
         }
     }
     stage ('Approval') {
-        def userInput = input message: 'Deploy ke production?', ok: 'Deploy', parameters: [booleanParam(name: 'DEPLOY', description: 'Deploy atau batalkan?', defaultValue: false)]
+        def userInput = input message: 'Deploy ke production?', ok: 'Deploy', parameters: [booleanParam(name: 'Deploy', description: 'Deploy atau batalkan?', defaultValue: false)]
         if (userInput.DEPLOY) {
             echo 'Memulai Deployment...'
         } else {
