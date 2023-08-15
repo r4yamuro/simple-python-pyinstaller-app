@@ -5,7 +5,7 @@ node {
     stage('Build') {
         docker.image('python:2-alpine').inside {
             sh 'python -m py_compile sources/add2vals.py sources/calc.py'
-            sh 'mkdir -p compiled-result && cp sources/*.pyc compiled-result/'
+            sh 'ls -la sources'
             stash(name: 'compiled-result')
         }
 
@@ -19,7 +19,7 @@ node {
         env.VOLUME = '${pwd()}/sources:/src'
         env.IMAGE = 'cdrx/pyinstaller-linux:python2'
         dir(env.BUILD_ID) {
-            unstash(name: 'compiled-result')
+            unstash(name: 'compiled-results')
             sh "docker run --rm -v ${env.VOLUME} ${env.IMAGE} 'pyinstaller -F add2vals.py'"
         }
         archiveArtifacts artifacts: 'sources/dist/add2vals'
